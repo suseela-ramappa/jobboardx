@@ -1,0 +1,69 @@
+{% extends 'jobs/home.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Job Seeker Dashboard{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <i class="bi bi-person-circle" style="font-size: 4rem;"></i>
+                </div>
+                <h4>{{ user.username }}</h4>
+                <p class="text-muted">Job Seeker</p>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'my_applications' %}" class="btn btn-outline-primary">My Applications</a>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Profile Information</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Recommended Jobs</h4>
+            </div>
+            <div class="card-body">
+                {% if recommended_jobs %}
+                <div class="list-group">
+                    {% for job in recommended_jobs %}
+                    <a href="{% url 'job_detail' job.id %}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ job.title }}</h5>
+                            <small>{{ job.created_at|timesince }} ago</small>
+                        </div>
+                        <p class="mb-1">{{ job.company.name }} - {{ job.location }}</p>
+                        <small class="text-muted">{{ job.get_job_type_display }}</small>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    No recommended jobs found based on your profile.
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

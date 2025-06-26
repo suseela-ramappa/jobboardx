@@ -1,0 +1,52 @@
+{% extends 'jobs/home.html' %}
+
+{% block title %}My Applications{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">My Applications</h2>
+
+{% if applications %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Applied</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for application in applications %}
+            <tr>
+                <td><a href="{% url 'job_detail' application.job.id %}">{{ application.job.title }}</a></td>
+                <td>{{ application.job.company.name }}</td>
+                <td>{{ application.applied_at|date:"M d, Y" }}</td>
+                <td>
+                    <span class="badge 
+                        {% if application.status == 'applied' %}bg-primary
+                        {% elif application.status == 'reviewed' %}bg-info
+                        {% elif application.status == 'interview' %}bg-warning
+                        {% elif application.status == 'rejected' %}bg-danger
+                        {% elif application.status == 'hired' %}bg-success
+                        {% endif %}">
+                        {{ application.get_status_display }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{{ application.resume.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        View Resume
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    You haven't applied to any jobs yet.
+</div>
+{% endif %}
+{% endblock %}

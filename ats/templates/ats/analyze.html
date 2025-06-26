@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}ATS Analyzer{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>ATS Resume Analyzer</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-success">Analyze</button>
+    </form>
+
+    {% if score is not None %}
+        <div class="alert alert-info mt-4">
+            <strong>ATS Score:</strong> {{ score }}%
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
